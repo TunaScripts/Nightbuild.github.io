@@ -16,15 +16,15 @@
 
         <div class="login-form">
             <label>Enter your email</label>
-            <input type="email" placeholder="name@email.com" class="login-input">
-            <button class="magic-link-btn" onclick="window.location.href='index.html'">Send magic link</button>
+            <input type="email" id="emailInput" placeholder="name@email.com" class="login-input">
+            <button class="magic-link-btn" id="emailBtn">Send magic link</button>
             
             <div class="divider"><span>OR</span></div>
             
-            <button class="social-btn" onclick="window.location.href='index.html'">
+            <button class="social-btn" id="googleBtn">
                 Continue with Google
             </button>
-            <button class="social-btn github-btn" onclick="window.location.href='index.html'">
+            <button class="social-btn github-btn" id="githubBtn">
                 Continue with GitHub
             </button>
         </div>
@@ -34,6 +34,60 @@
             By logging in, you agree to our <a href="#">Terms of Service</a>.
         </div>
     </div>
+
+    <script type="module">
+        import { initializeApp } from "https://www.gstatic.com/firebasejs/10.8.1/firebase-app.js";
+        import { getAuth, signInWithPopup, GoogleAuthProvider, GithubAuthProvider } from "https://www.gstatic.com/firebasejs/10.8.1/firebase-auth.js";
+
+        // --- REPLACE THIS WITH YOUR EXACT FIREBASE CONFIG ---
+        const firebaseConfig = {
+            apiKey: "YOUR_API_KEY",
+            authDomain: "tuna-scripts.firebaseapp.com",
+            projectId: "tuna-scripts",
+            storageBucket: "tuna-scripts.appspot.com",
+            messagingSenderId: "123456789",
+            appId: "YOUR_APP_ID"
+        };
+
+        const app = initializeApp(firebaseConfig);
+        const auth = getAuth(app);
+
+        // Google Login
+        document.getElementById('googleBtn').addEventListener('click', () => {
+            const provider = new GoogleAuthProvider();
+            signInWithPopup(auth, provider)
+                .then((result) => {
+                    // Success! Send them to the main dashboard
+                    window.location.href = 'index.html';
+                })
+                .catch((error) => {
+                    alert("Google Login Error: " + error.message);
+                });
+        });
+
+        // GitHub Login
+        document.getElementById('githubBtn').addEventListener('click', () => {
+            const provider = new GithubAuthProvider();
+            signInWithPopup(auth, provider)
+                .then((result) => {
+                    // Success! Send them to the main dashboard
+                    window.location.href = 'index.html';
+                })
+                .catch((error) => {
+                    alert("GitHub Login Error: " + error.message);
+                });
+        });
+
+        // Email Placeholder (Firebase Magic Links require extra setup in the console)
+        document.getElementById('emailBtn').addEventListener('click', () => {
+            const email = document.getElementById('emailInput').value;
+            if(email) {
+                alert("Magic link sent to " + email + " (Requires Firebase Email Auth to be enabled in console)");
+            } else {
+                alert("Please enter an email first.");
+            }
+        });
+    </script>
 
 </body>
 </html>
