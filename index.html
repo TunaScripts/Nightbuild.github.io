@@ -3,60 +3,37 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Tuna Scripts | Premium Database</title>
+    <title>Login | Tuna Scripts</title>
     <link rel="stylesheet" href="styles.css">
-    
-    <script type="module" src="app.js" defer></script>
 </head>
-<body>
-
-    <header class="navbar">
-        <div class="logo">
-            <img src="logo.gif" alt="Tuna Scripts Logo" class="site-logo">
-            <h1>TUNA<span>SCRIPTS</span></h1>
+<body class="login-body">
+    
+    <div class="login-container">
+        <div class="login-header">
+            <img src="logo.gif" alt="Tuna Scripts" class="login-logo">
+            <h2>Welcome to Tuna Scripts</h2>
         </div>
-        <div class="controls">
-            <input type="text" id="searchInput" placeholder="Search database...">
-            <select id="categoryFilter">
-                <option value="All">All Categories</option>
-                <option value="UI">UI</option>
-                <option value="World">World</option>
-                <option value="Utility">Utility</option>
-            </select>
-        </div>
-    </header>
 
-    <main>
-        <div class="grid" id="scriptGrid">
-            </div>
-    </main>
-
-    <div class="modal-overlay" id="modal">
-        <div class="modal-content">
-            <button class="close-btn" id="closeModalBtn">&times;</button>
-            <div class="modal-header">
-                <h2 id="modalTitle">Script Title</h2>
-                <div class="modal-meta" id="modalMeta"></div>
-            </div>
-            <p id="modalDesc" class="modal-description"></p>
-            <div class="code-container">
-                <pre><code id="modalCode"></code></pre>
-            </div>
-            <button class="action-btn" id="copyBtn">COPY SOURCE CODE</button>
+        <div class="login-form">
+            <label>Enter your email</label>
+            <input type="email" placeholder="name@email.com" class="login-input">
+            <button class="magic-link-btn" onclick="window.location.href='index.html'">Send magic link</button>
             
-            <div class="comments-section">
-                <h3>Global Chat</h3>
-                <div class="add-comment">
-                    <input type="text" id="commentInput" placeholder="Write a public comment...">
-                    <button class="action-btn post-btn" id="postCommentBtn">POST</button>
-                </div>
-                <div id="commentsList" class="comments-list">
-                    </div>
-            </div>
+            <div class="divider"><span>OR</span></div>
+            
+            <button class="social-btn" onclick="window.location.href='index.html'">
+                Continue with Google
+            </button>
+            <button class="social-btn github-btn" onclick="window.location.href='index.html'">
+                Continue with GitHub
+            </button>
+        </div>
+        
+        <div class="login-footer">
+            Need help? <a href="#">Need more help with logging in?</a><br><br>
+            By logging in, you agree to our <a href="#">Terms of Service</a>.
         </div>
     </div>
-
-    <div id="toast" class="toast">Code copied to clipboard!</div>
 
 </body>
 </html>
