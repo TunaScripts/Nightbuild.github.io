@@ -3,138 +3,18 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Tuna Scripts</title>
-    <style>
-        :root {
-            --bg-color: #0f172a;
-            --card-bg: #1e293b;
-            --text-main: #f8fafc;
-            --text-muted: #94a3b8;
-            --accent: #3b82f6;
-            --accent-hover: #2563eb;
-        }
-
-        body {
-            font-family: system-ui, -apple-system, sans-serif;
-            background-color: var(--bg-color);
-            color: var(--text-main);
-            margin: 0;
-            padding: 0;
-        }
-
-        header {
-            background-color: var(--card-bg);
-            padding: 1.5rem 2rem;
-            border-bottom: 1px solid #334155;
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-            flex-wrap: wrap;
-            gap: 1rem;
-        }
-
-        h1 { margin: 0; color: var(--accent); }
-
-        .controls {
-            display: flex;
-            gap: 1rem;
-        }
-
-        input, select, button {
-            padding: 0.5rem 1rem;
-            border-radius: 0.375rem;
-            border: 1px solid #334155;
-            background: var(--bg-color);
-            color: var(--text-main);
-            outline: none;
-        }
-
-        button {
-            background-color: var(--accent);
-            color: white;
-            border: none;
-            cursor: pointer;
-            font-weight: bold;
-        }
-
-        button:hover { background-color: var(--accent-hover); }
-
-        main {
-            padding: 2rem;
-            max-width: 1200px;
-            margin: 0 auto;
-        }
-
-        .grid {
-            display: grid;
-            grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
-            gap: 1.5rem;
-        }
-
-        .card {
-            background-color: var(--card-bg);
-            border: 1px solid #334155;
-            border-radius: 0.5rem;
-            padding: 1.5rem;
-            cursor: pointer;
-            transition: transform 0.2s;
-        }
-
-        .card:hover { transform: translateY(-3px); border-color: var(--accent); }
-        .card h3 { margin: 0 0 0.5rem 0; }
-        .tag {
-            display: inline-block;
-            background: #334155;
-            padding: 0.2rem 0.5rem;
-            border-radius: 0.25rem;
-            font-size: 0.8rem;
-            margin-bottom: 1rem;
-        }
-
-        /* Modal Styles */
-        .modal-overlay {
-            display: none;
-            position: fixed;
-            top: 0; left: 0; right: 0; bottom: 0;
-            background: rgba(0, 0, 0, 0.7);
-            align-items: center;
-            justify-content: center;
-            padding: 1rem;
-        }
-
-        .modal {
-            background: var(--card-bg);
-            width: 100%;
-            max-width: 600px;
-            border-radius: 0.5rem;
-            padding: 2rem;
-            position: relative;
-        }
-
-        .close-btn {
-            position: absolute;
-            top: 1rem; right: 1rem;
-            background: transparent;
-            font-size: 1.5rem;
-            padding: 0;
-        }
-
-        pre {
-            background: var(--bg-color);
-            padding: 1rem;
-            border-radius: 0.5rem;
-            overflow-x: auto;
-            border: 1px solid #334155;
-            color: #10b981;
-        }
-    </style>
+    <title>Tuna Scripts | Premium Database</title>
+    <link rel="stylesheet" href="styles.css">
+    <script src="app.js" defer></script>
 </head>
 <body>
 
-    <header>
-        <h1>Tuna Scripts</h1>
+    <header class="navbar">
+        <div class="logo">
+            <h1>TUNA<span>SCRIPTS</span></h1>
+        </div>
         <div class="controls">
-            <input type="text" id="searchInput" placeholder="Search scripts...">
+            <input type="text" id="searchInput" placeholder="Search database...">
             <select id="categoryFilter">
                 <option value="All">All Categories</option>
                 <option value="UI">UI</option>
@@ -150,90 +30,21 @@
     </main>
 
     <div class="modal-overlay" id="modal">
-        <div class="modal">
-            <button class="close-btn" onclick="closeModal()">×</button>
-            <h2 id="modalTitle">Script Title</h2>
-            <p id="modalAuthor" style="color: var(--text-muted);"></p>
-            <p id="modalDesc"></p>
-            <pre><code id="modalCode"></code></pre>
-            <button onclick="copyCode()" id="copyBtn">Copy Code</button>
+        <div class="modal-content">
+            <button class="close-btn" id="closeModalBtn">&times;</button>
+            <div class="modal-header">
+                <h2 id="modalTitle">Script Title</h2>
+                <div class="modal-meta" id="modalMeta"></div>
+            </div>
+            <p id="modalDesc" class="modal-description"></p>
+            <div class="code-container">
+                <pre><code id="modalCode"></code></pre>
+            </div>
+            <button class="action-btn" id="copyBtn">COPY SOURCE CODE</button>
         </div>
     </div>
 
-    <script>
-        // Script Database
-        const scripts = [
-            { title: 'Advanced FPS Counter', author: 'TunaDev', rating: 4.8, category: 'UI', description: 'A lightweight UI script that tracks and displays the frames per second in real-time.', code: 'local RunService = game:GetService("RunService")\nlocal fpsLabel = script.Parent\nRunService.RenderStepped:Connect(function(step)\n\tlocal fps = math.floor(1 / step)\n\tfpsLabel.Text = "FPS: " .. fps\nend)' },
-            { title: 'Smooth Day/Night Cycle', author: 'SolarFlare', rating: 4.5, category: 'World', description: 'Automatically cycles the game lighting time of day smoothly.', code: 'local Lighting = game:GetService("Lighting")\nlocal cycleSpeed = 0.1\nwhile true do\n\tLighting.ClockTime = Lighting.ClockTime + cycleSpeed\n\ttask.wait(0.5)\nend' },
-            { title: 'Simple Auto-Sprint', author: 'SpeedyG', rating: 4.2, category: 'Utility', description: 'Increases player walk speed while holding the Left Shift key.', code: 'local UIS = game:GetService("UserInputService")\nlocal player = game.Players.LocalPlayer\nUIS.InputBegan:Connect(function(input)\n\tif input.KeyCode == Enum.KeyCode.LeftShift then\n\t\tplayer.Character.Humanoid.WalkSpeed = 24\n\tend\nend)\nUIS.InputEnded:Connect(function(input)\n\tif input.KeyCode == Enum.KeyCode.LeftShift then\n\t\tplayer.Character.Humanoid.WalkSpeed = 16\n\tend\nend)' },
-            { title: 'Custom Notification System', author: 'UI_Master', rating: 4.9, category: 'UI', description: 'A sleek, slide-in notification system for alerting players.', code: 'local function sendNotification(title, text)\n\tgame.StarterGui:SetCore("SendNotification", {\n\t\tTitle = title;\n\t\tText = text;\n\t\tDuration = 5;\n\t})\nend\nsendNotification("Welcome!", "Thanks for using Tuna Scripts.")' },
-            { title: 'Part Color Randomizer', author: 'ChaosCoder', rating: 3.8, category: 'World', description: 'Randomizes the color of a specific part every second.', code: 'local part = workspace:WaitForChild("DiscoPart")\nwhile true do\n\tpart.Color = Color3.new(math.random(), math.random(), math.random())\n\ttask.wait(1)\nend' }
-        ];
+    <div id="toast" class="toast">Code copied to clipboard!</div>
 
-        const grid = document.getElementById('scriptGrid');
-        const searchInput = document.getElementById('searchInput');
-        const categoryFilter = document.getElementById('categoryFilter');
-        const modal = document.getElementById('modal');
-
-        // Render scripts to the page
-        function renderScripts() {
-            const searchTerm = searchInput.value.toLowerCase();
-            const category = categoryFilter.value;
-
-            grid.innerHTML = '';
-
-            const filteredScripts = scripts.filter(script => {
-                const matchesSearch = script.title.toLowerCase().includes(searchTerm) || script.description.toLowerCase().includes(searchTerm);
-                const matchesCategory = category === 'All' || script.category === category;
-                return matchesSearch && matchesCategory;
-            });
-
-            filteredScripts.forEach(script => {
-                const card = document.createElement('div');
-                card.className = 'card';
-                card.onclick = () => openModal(script);
-                card.innerHTML = `
-                    <h3>${script.title}</h3>
-                    <span class="tag">${script.category}</span>
-                    <p style="color: #94a3b8; font-size: 0.9rem;">By ${script.author} • ⭐ ${script.rating}</p>
-                    <p>${script.description}</p>
-                `;
-                grid.appendChild(card);
-            });
-        }
-
-        // Modal Functions
-        function openModal(script) {
-            document.getElementById('modalTitle').innerText = script.title;
-            document.getElementById('modalAuthor').innerText = `By ${script.author} | Category: ${script.category}`;
-            document.getElementById('modalDesc').innerText = script.description;
-            document.getElementById('modalCode').innerText = script.code;
-            document.getElementById('copyBtn').innerText = 'Copy Code';
-            modal.style.display = 'flex';
-        }
-
-        function closeModal() {
-            modal.style.display = 'none';
-        }
-
-        function copyCode() {
-            const codeText = document.getElementById('modalCode').innerText;
-            navigator.clipboard.writeText(codeText).then(() => {
-                document.getElementById('copyBtn').innerText = 'Copied!';
-            });
-        }
-
-        // Close modal when clicking outside
-        window.onclick = function(event) {
-            if (event.target == modal) { closeModal(); }
-        }
-
-        // Event Listeners for search and filter
-        searchInput.addEventListener('input', renderScripts);
-        categoryFilter.addEventListener('change', renderScripts);
-
-        // Initial render
-        renderScripts();
-    </script>
 </body>
 </html>
