@@ -5,12 +5,14 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Tuna Scripts | Premium Database</title>
     <link rel="stylesheet" href="styles.css">
-    <script src="app.js" defer></script>
+    
+    <script type="module" src="app.js" defer></script>
 </head>
 <body>
 
     <header class="navbar">
         <div class="logo">
+            <img src="logo.gif" alt="Tuna Scripts Logo" class="site-logo">
             <h1>TUNA<span>SCRIPTS</span></h1>
         </div>
         <div class="controls">
@@ -41,6 +43,16 @@
                 <pre><code id="modalCode"></code></pre>
             </div>
             <button class="action-btn" id="copyBtn">COPY SOURCE CODE</button>
+            
+            <div class="comments-section">
+                <h3>Global Chat</h3>
+                <div class="add-comment">
+                    <input type="text" id="commentInput" placeholder="Write a public comment...">
+                    <button class="action-btn post-btn" id="postCommentBtn">POST</button>
+                </div>
+                <div id="commentsList" class="comments-list">
+                    </div>
+            </div>
         </div>
     </div>
 
