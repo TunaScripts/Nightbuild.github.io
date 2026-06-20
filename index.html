@@ -1,245 +1,239 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-<meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Train With Me</title>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Tuna Scripts</title>
+    <style>
+        :root {
+            --bg-color: #0f172a;
+            --card-bg: #1e293b;
+            --text-main: #f8fafc;
+            --text-muted: #94a3b8;
+            --accent: #3b82f6;
+            --accent-hover: #2563eb;
+        }
 
-<link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;600;700&display=swap" rel="stylesheet">
+        body {
+            font-family: system-ui, -apple-system, sans-serif;
+            background-color: var(--bg-color);
+            color: var(--text-main);
+            margin: 0;
+            padding: 0;
+        }
 
-<style>
-*{box-sizing:border-box;margin:0;padding:0}
-body{font-family:Poppins;background:#0f172a;color:#e5e7eb}
+        header {
+            background-color: var(--card-bg);
+            padding: 1.5rem 2rem;
+            border-bottom: 1px solid #334155;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            flex-wrap: wrap;
+            gap: 1rem;
+        }
 
-/* LOGIN */
-.center{display:flex;justify-content:center;align-items:center;height:100vh}
-.card{background:#111827;padding:30px;border-radius:20px;width:90%;max-width:400px;text-align:center}
-input,textarea,button{width:100%;padding:12px;margin-top:10px;border-radius:10px;border:none}
-input,textarea{background:#1f2937;color:white}
-button{background:#22c55e;color:black;font-weight:600}
+        h1 { margin: 0; color: var(--accent); }
 
-/* HEADER */
-header{text-align:center;padding:20px;border-bottom:1px solid #1f2937}
+        .controls {
+            display: flex;
+            gap: 1rem;
+        }
 
-/* LAYOUT */
-.container{max-width:1200px;margin:auto;padding:20px}
-.grid{display:grid;grid-template-columns:1fr;gap:20px}
+        input, select, button {
+            padding: 0.5rem 1rem;
+            border-radius: 0.375rem;
+            border: 1px solid #334155;
+            background: var(--bg-color);
+            color: var(--text-main);
+            outline: none;
+        }
 
-.section{background:#111827;padding:20px;border-radius:20px}
+        button {
+            background-color: var(--accent);
+            color: white;
+            border: none;
+            cursor: pointer;
+            font-weight: bold;
+        }
 
-/* GALLERY */
-.gallery{display:grid;grid-template-columns:repeat(auto-fit,minmax(120px,1fr));gap:10px}
-.gallery img{width:100%;height:130px;object-fit:cover;border-radius:10px}
+        button:hover { background-color: var(--accent-hover); }
 
-/* CHAT */
-.chat{max-height:300px;overflow:auto;background:#0b1220;padding:10px;border-radius:10px}
-.msg{padding:10px;margin:6px;border-radius:10px}
-.me{background:#22c55e;color:black;text-align:right}
-.them{background:#1f2937}
+        main {
+            padding: 2rem;
+            max-width: 1200px;
+            margin: 0 auto;
+        }
 
-/* COMMENTS */
-.comment{background:#1f2937;padding:10px;margin-top:10px;border-radius:10px}
+        .grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
+            gap: 1.5rem;
+        }
 
-/* RESPONSIVE */
-@media(min-width:768px){
-.grid{grid-template-columns:1fr 1fr}
-}
-@media(min-width:1100px){
-.grid{grid-template-columns:1fr 1fr 1fr}
-}
-</style>
+        .card {
+            background-color: var(--card-bg);
+            border: 1px solid #334155;
+            border-radius: 0.5rem;
+            padding: 1.5rem;
+            cursor: pointer;
+            transition: transform 0.2s;
+        }
 
-<script type="module">
-import { initializeApp } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-app.js";
-import { getFirestore, collection, addDoc, onSnapshot, query, orderBy } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-firestore.js";
+        .card:hover { transform: translateY(-3px); border-color: var(--accent); }
+        .card h3 { margin: 0 0 0.5rem 0; }
+        .tag {
+            display: inline-block;
+            background: #334155;
+            padding: 0.2rem 0.5rem;
+            border-radius: 0.25rem;
+            font-size: 0.8rem;
+            margin-bottom: 1rem;
+        }
 
-const firebaseConfig = {
-  apiKey: "AIzaSyAiCVRf6_qtx8VAPPeXg_9n3alQ-nUv14I",
-  authDomain: "nightbuild.firebaseapp.com",
-  projectId: "nightbuild",
-};
+        /* Modal Styles */
+        .modal-overlay {
+            display: none;
+            position: fixed;
+            top: 0; left: 0; right: 0; bottom: 0;
+            background: rgba(0, 0, 0, 0.7);
+            align-items: center;
+            justify-content: center;
+            padding: 1rem;
+        }
 
-const app = initializeApp(firebaseConfig);
-const db = getFirestore(app);
+        .modal {
+            background: var(--card-bg);
+            width: 100%;
+            max-width: 600px;
+            border-radius: 0.5rem;
+            padding: 2rem;
+            position: relative;
+        }
 
-let user=null;
-let rating=0;
+        .close-btn {
+            position: absolute;
+            top: 1rem; right: 1rem;
+            background: transparent;
+            font-size: 1.5rem;
+            padding: 0;
+        }
 
-// LOGIN
-window.start=function(){
-user=document.getElementById('name').value;
-if(!user) return alert("Enter name");
-
-document.getElementById('login').style.display='none';
-document.getElementById('app').style.display='block';
-
-document.getElementById('bookName').value=user;
-
-listenChat();
-listenComments();
-}
-
-// SEND MESSAGE (PRIVATE)
-window.send=async function(){
-let text=document.getElementById('msg').value;
-if(!text) return;
-
-await addDoc(collection(db,"messages"),{
-name:user,
-to:"trainer",
-text:text,
-time:Date.now()
-});
-
-document.getElementById('msg').value='';
-}
-
-// PRIVATE CHAT DISPLAY
-function listenChat(){
-const q=query(collection(db,"messages"),orderBy("time"));
-
-onSnapshot(q,snapshot=>{
-let box=document.getElementById('chat');
-box.innerHTML='';
-
-snapshot.forEach(doc=>{
-let m=doc.data();
-
-// 🔐 PRIVATE FILTER
-if(
-(m.name===user && m.to==="trainer") ||
-(m.name==="trainer" && m.to===user)
-){
-let div=document.createElement('div');
-div.className='msg '+(m.name===user?'me':'them');
-div.innerText=m.name+": "+m.text;
-box.appendChild(div);
-}
-});
-});
-}
-
-// BOOKINGS
-window.book=async function(e){
-e.preventDefault();
-
-await addDoc(collection(db,"appointments"),{
-name:user,
-email:document.getElementById('email').value,
-date:document.getElementById('date').value,
-time:document.getElementById('time').value
-});
-
-alert("Booking sent!");
-}
-
-// COMMENTS
-window.rate=function(n){rating=n}
-
-window.addComment=async function(){
-let text=document.getElementById('commentInput').value;
-if(!text) return;
-
-await addDoc(collection(db,"comments"),{
-name:user,
-text:text,
-stars:rating,
-time:Date.now()
-});
-
-document.getElementById('commentInput').value='';
-}
-
-function listenComments(){
-const q=query(collection(db,"comments"),orderBy("time"));
-
-onSnapshot(q,snapshot=>{
-let box=document.getElementById('comments');
-box.innerHTML='';
-
-snapshot.forEach(doc=>{
-let c=doc.data();
-let div=document.createElement('div');
-div.className='comment';
-div.innerHTML=`<strong>${c.name}</strong><br>${'⭐'.repeat(c.stars)}<br>${c.text}`;
-box.appendChild(div);
-});
-});
-}
-</script>
+        pre {
+            background: var(--bg-color);
+            padding: 1rem;
+            border-radius: 0.5rem;
+            overflow-x: auto;
+            border: 1px solid #334155;
+            color: #10b981;
+        }
+    </style>
 </head>
-
 <body>
 
-<!-- LOGIN -->
-<div id="login" class="center">
-  <div class="card">
-    <h2>💪 Train With Me</h2>
-    <input id="name" placeholder="Enter your name">
-    <button onclick="start()">Enter</button>
-  </div>
-</div>
+    <header>
+        <h1>Tuna Scripts</h1>
+        <div class="controls">
+            <input type="text" id="searchInput" placeholder="Search scripts...">
+            <select id="categoryFilter">
+                <option value="All">All Categories</option>
+                <option value="UI">UI</option>
+                <option value="World">World</option>
+                <option value="Utility">Utility</option>
+            </select>
+        </div>
+    </header>
 
-<!-- MAIN -->
-<div id="app" style="display:none">
+    <main>
+        <div class="grid" id="scriptGrid">
+            </div>
+    </main>
 
-<header>
-<h1>Train With Me</h1>
-<p>Book • Train • Transform</p>
-</header>
+    <div class="modal-overlay" id="modal">
+        <div class="modal">
+            <button class="close-btn" onclick="closeModal()">×</button>
+            <h2 id="modalTitle">Script Title</h2>
+            <p id="modalAuthor" style="color: var(--text-muted);"></p>
+            <p id="modalDesc"></p>
+            <pre><code id="modalCode"></code></pre>
+            <button onclick="copyCode()" id="copyBtn">Copy Code</button>
+        </div>
+    </div>
 
-<div class="container">
-<div class="grid">
+    <script>
+        // Script Database
+        const scripts = [
+            { title: 'Advanced FPS Counter', author: 'TunaDev', rating: 4.8, category: 'UI', description: 'A lightweight UI script that tracks and displays the frames per second in real-time.', code: 'local RunService = game:GetService("RunService")\nlocal fpsLabel = script.Parent\nRunService.RenderStepped:Connect(function(step)\n\tlocal fps = math.floor(1 / step)\n\tfpsLabel.Text = "FPS: " .. fps\nend)' },
+            { title: 'Smooth Day/Night Cycle', author: 'SolarFlare', rating: 4.5, category: 'World', description: 'Automatically cycles the game lighting time of day smoothly.', code: 'local Lighting = game:GetService("Lighting")\nlocal cycleSpeed = 0.1\nwhile true do\n\tLighting.ClockTime = Lighting.ClockTime + cycleSpeed\n\ttask.wait(0.5)\nend' },
+            { title: 'Simple Auto-Sprint', author: 'SpeedyG', rating: 4.2, category: 'Utility', description: 'Increases player walk speed while holding the Left Shift key.', code: 'local UIS = game:GetService("UserInputService")\nlocal player = game.Players.LocalPlayer\nUIS.InputBegan:Connect(function(input)\n\tif input.KeyCode == Enum.KeyCode.LeftShift then\n\t\tplayer.Character.Humanoid.WalkSpeed = 24\n\tend\nend)\nUIS.InputEnded:Connect(function(input)\n\tif input.KeyCode == Enum.KeyCode.LeftShift then\n\t\tplayer.Character.Humanoid.WalkSpeed = 16\n\tend\nend)' },
+            { title: 'Custom Notification System', author: 'UI_Master', rating: 4.9, category: 'UI', description: 'A sleek, slide-in notification system for alerting players.', code: 'local function sendNotification(title, text)\n\tgame.StarterGui:SetCore("SendNotification", {\n\t\tTitle = title;\n\t\tText = text;\n\t\tDuration = 5;\n\t})\nend\nsendNotification("Welcome!", "Thanks for using Tuna Scripts.")' },
+            { title: 'Part Color Randomizer', author: 'ChaosCoder', rating: 3.8, category: 'World', description: 'Randomizes the color of a specific part every second.', code: 'local part = workspace:WaitForChild("DiscoPart")\nwhile true do\n\tpart.Color = Color3.new(math.random(), math.random(), math.random())\n\ttask.wait(1)\nend' }
+        ];
 
-<div class="section">
-<h2>📅 Book Session</h2>
-<form onsubmit="book(event)">
-<input id="bookName" required>
-<input id="email" placeholder="Email" required>
-<input type="date" id="date" required>
-<input type="time" id="time" required>
-<button>Book Now</button>
-</form>
-</div>
+        const grid = document.getElementById('scriptGrid');
+        const searchInput = document.getElementById('searchInput');
+        const categoryFilter = document.getElementById('categoryFilter');
+        const modal = document.getElementById('modal');
 
-<div class="section">
-<h2>🏋️ Gallery</h2>
-<div class="gallery">
-<img src="https://images.unsplash.com/photo-1599058917212-d750089bc07e">
-<img src="https://images.unsplash.com/photo-1558611848-73f7eb4001a1">
-<img src="https://images.unsplash.com/photo-1517836357463-d25dfeac3438">
-</div>
-</div>
+        // Render scripts to the page
+        function renderScripts() {
+            const searchTerm = searchInput.value.toLowerCase();
+            const category = categoryFilter.value;
 
-<div class="section">
-<h2>💬 Chat</h2>
-<div id="chat" class="chat"></div>
-<input id="msg" placeholder="Type message...">
-<button onclick="send()">Send</button>
-</div>
+            grid.innerHTML = '';
 
-<div class="section">
-<h2>⭐ Reviews</h2>
+            const filteredScripts = scripts.filter(script => {
+                const matchesSearch = script.title.toLowerCase().includes(searchTerm) || script.description.toLowerCase().includes(searchTerm);
+                const matchesCategory = category === 'All' || script.category === category;
+                return matchesSearch && matchesCategory;
+            });
 
-<div>
-<span onclick="rate(1)">⭐</span>
-<span onclick="rate(2)">⭐</span>
-<span onclick="rate(3)">⭐</span>
-<span onclick="rate(4)">⭐</span>
-<span onclick="rate(5)">⭐</span>
-</div>
+            filteredScripts.forEach(script => {
+                const card = document.createElement('div');
+                card.className = 'card';
+                card.onclick = () => openModal(script);
+                card.innerHTML = `
+                    <h3>${script.title}</h3>
+                    <span class="tag">${script.category}</span>
+                    <p style="color: #94a3b8; font-size: 0.9rem;">By ${script.author} • ⭐ ${script.rating}</p>
+                    <p>${script.description}</p>
+                `;
+                grid.appendChild(card);
+            });
+        }
 
-<textarea id="commentInput" placeholder="Write review..."></textarea>
-<button onclick="addComment()">Post</button>
+        // Modal Functions
+        function openModal(script) {
+            document.getElementById('modalTitle').innerText = script.title;
+            document.getElementById('modalAuthor').innerText = `By ${script.author} | Category: ${script.category}`;
+            document.getElementById('modalDesc').innerText = script.description;
+            document.getElementById('modalCode').innerText = script.code;
+            document.getElementById('copyBtn').innerText = 'Copy Code';
+            modal.style.display = 'flex';
+        }
 
-<div id="comments"></div>
+        function closeModal() {
+            modal.style.display = 'none';
+        }
 
-</div>
+        function copyCode() {
+            const codeText = document.getElementById('modalCode').innerText;
+            navigator.clipboard.writeText(codeText).then(() => {
+                document.getElementById('copyBtn').innerText = 'Copied!';
+            });
+        }
 
-</div>
-</div>
+        // Close modal when clicking outside
+        window.onclick = function(event) {
+            if (event.target == modal) { closeModal(); }
+        }
 
-</div>
+        // Event Listeners for search and filter
+        searchInput.addEventListener('input', renderScripts);
+        categoryFilter.addEventListener('change', renderScripts);
 
+        // Initial render
+        renderScripts();
+    </script>
 </body>
 </html>
