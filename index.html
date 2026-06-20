@@ -3,35 +3,79 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Login | Tuna Scripts</title>
+    <title>Tuna Scripts | V2 Database</title>
     <link rel="stylesheet" href="styles.css">
+    <script type="module" src="app.js" defer></script>
 </head>
-<body class="login-body">
-    
-    <div class="login-container">
-        <div class="login-header">
-            <img src="logo.gif" alt="Tuna Scripts" class="login-logo">
-            <h2>Welcome to Tuna Scripts</h2>
+<body>
+
+    <header class="top-nav">
+        <div class="nav-left">
+            <img src="logo.gif" alt="Logo" class="nav-logo">
+            <span class="brand-name">Tuna Scripts</span>
+        </div>
+        <div class="nav-center">
+            <a href="#" class="nav-link active">Scripts</a>
+            <a href="#" class="nav-link">Trending</a>
+            <a href="#" class="nav-link">Executors</a>
+        </div>
+        <div class="nav-right">
+            <button class="btn-pro">GET PRO</button>
+            <a href="login.html" class="btn-login">Login</a>
+        </div>
+    </header>
+
+    <main class="dashboard-main">
+        <div class="hero-section">
+            <div class="search-container">
+                <input type="text" placeholder="Search scripts, games, or creators...">
+                <button class="search-btn">Search</button>
+            </div>
+            <div class="platform-stats">
+                <span>📁 30,000+ scripts</span>
+                <span>👥 167K+ users</span>
+                <span>🟢 6,534 online</span>
+            </div>
         </div>
 
-        <div class="login-form">
-            <label>Enter your email</label>
-            <input type="email" placeholder="name@email.com" class="login-input">
-            <button class="magic-link-btn" onclick="window.location.href='index.html'">Send magic link</button>
-            
-            <div class="divider"><span>OR</span></div>
-            
-            <button class="social-btn" onclick="window.location.href='index.html'">
-                Continue with Google
-            </button>
-            <button class="social-btn github-btn" onclick="window.location.href='index.html'">
-                Continue with GitHub
-            </button>
+        <div class="section-header">
+            <h2>Latest Scripts</h2>
+            <button class="btn-pro">+ Add your script</button>
         </div>
         
-        <div class="login-footer">
-            Need help? <a href="#">Need more help with logging in?</a><br><br>
-            By logging in, you agree to our <a href="#">Terms of Service</a>.
+        <div class="filter-bar">
+            <div class="filter-pills">
+                <button class="pill active">All</button>
+                <button class="pill">🔑 No keysystem</button>
+                <button class="pill">✔️ Verified only</button>
+            </div>
+            <div class="sort-dropdown">Newest First ⚙️</div>
+        </div>
+
+        <div class="grid" id="scriptGrid"></div>
+    </main>
+
+    <div class="modal-overlay" id="modal">
+        <div class="modal-content">
+            <button class="close-btn" onclick="closeModal()">&times;</button>
+            <div class="modal-header">
+                <h2 id="modalTitle">Script Title</h2>
+            </div>
+            <p id="modalDesc" class="text-muted" style="margin-bottom: 1rem;"></p>
+            
+            <div class="code-container">
+                <pre><code id="modalCode"></code></pre>
+            </div>
+            <button class="magic-link-btn" onclick="copyCode()" style="width: 100%; margin-bottom: 2rem;">COPY SOURCE CODE</button>
+            
+            <div class="comments-section">
+                <h3 style="color: white; margin-bottom: 1rem;">Community Comments</h3>
+                <div style="display: flex; gap: 0.5rem; margin-bottom: 1.5rem;">
+                    <input type="text" id="commentInput" class="login-input" style="flex: 1;" placeholder="Write a comment...">
+                    <button class="btn-pro" id="postCommentBtn">POST</button>
+                </div>
+                <div id="commentsList" class="comments-list"></div>
+            </div>
         </div>
     </div>
 
